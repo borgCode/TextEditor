@@ -2,16 +2,11 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
-import org.w3c.dom.Text;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class TextEditor {
 
@@ -20,6 +15,9 @@ public class TextEditor {
     JTextArea textArea = new JTextArea();
     JScrollPane sp = new JScrollPane(textArea);
     JFileChooser fc = new JFileChooser();
+    String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+    String fileTitle = "";
+    File filePath;
 
     public TextEditor() {
 
@@ -41,16 +39,19 @@ public class TextEditor {
         file.addSeparator();
         file.add(fi6);
 
-
         JMenu edit = new JMenu("Edit");
 
         JMenu options = new JMenu("Options");
         JCheckBoxMenuItem darkMode = new JCheckBoxMenuItem("Dark Mode");
         options.add(darkMode);
 
+        JComboBox<String> fontList = new JComboBox<>(fonts);
+
+
         menuBar.add(file);
         menuBar.add(edit);
         menuBar.add(options);
+        menuBar.add(fontList);
 
 
         textArea.setLineWrap(true);
@@ -58,9 +59,13 @@ public class TextEditor {
         frame.add(sp);
 
 
+        frame.setTitle(fileTitle);
+
         frame.setJMenuBar(menuBar);
-        frame.setSize(1000,800);
+        frame.setSize(1000, 800);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setResizable(true);
+
 
         frame.setVisible(true);
 
@@ -76,14 +81,55 @@ public class TextEditor {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int returnVal = fc.showOpenDialog(fi2);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    try (BufferedReader reader = new BufferedReader(new FileReader(fc.getSelectedFile() + ".txt"))) {
+                        textArea.read(reader, textArea);
+                        filePath = fc.getSelectedFile();
+                        fileTitle = fc.getSelectedFile().getName().replaceFirst("[.][^.]+$", "");
+                        frame.setTitle(fileTitle);
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+
             }
         });
 
-        file.addActionListener(new ActionListener() {
+        fi3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int returnVal = fc.showSaveDialog(fi3);
+                if (!fileTitle.equals("")) {
+                    System.out.println(filePath);
+                    try (BufferedWriter buffer = new BufferedWriter(new FileWriter(filePath + ".txt"))) {
+                        buffer.write(textArea.getText());
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } else {
+                    int returnVal = fc.showSaveDialog(fi3);
+                    File fileName = new File(fc.getSelectedFile().toString() + ".txt");
+                    if (fileName.exists()) {
+                        int n = JOptionPane.showConfirmDialog(null,
+                                "The file name already exists, do you wish to overwrite it?",
+                                "Confirm",
+                                JOptionPane.YES_NO_OPTION);
+                        if (n != JOptionPane.YES_OPTION) {
+                            return;
+                        }
 
+                    }
+                    try (BufferedWriter buffer = new BufferedWriter(new FileWriter(fc.getSelectedFile() + ".txt"))) {
+                        buffer.write(textArea.getText());
+                        filePath = fc.getSelectedFile();
+                        fileTitle = fc.getSelectedFile().getName().replaceFirst("[.][^.]+$", "");
+                        frame.setTitle(fileTitle);
+
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
             }
         });
 
@@ -103,20 +149,19 @@ public class TextEditor {
                     }
 
                 }
-
-                try(BufferedWriter buffer = new BufferedWriter(new FileWriter(fc.getSelectedFile()+".txt"))) {
+                try (BufferedWriter buffer = new BufferedWriter(new FileWriter(fc.getSelectedFile() + ".txt"))) {
                     buffer.write(textArea.getText());
-                    frame.setTitle(fc.getSelectedFile().getName());
+                    filePath = fc.getSelectedFile();
+                    fileTitle = fc.getSelectedFile().getName().replaceFirst("[.][^.]+$", "");
+                    frame.setTitle(fileTitle);
+
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
 
+
             }
         });
-
-
-
-
 
 
         darkMode.addActionListener(new ActionListener() {
@@ -144,6 +189,13 @@ public class TextEditor {
                     });
                 }
             }
+        });
+
+        fontList.addActionListener(e -> {
+            String selectedFamilyName = (String) fontList.getSelectedItem();
+            Font selectedFont = new Font(selectedFamilyName, Font.PLAIN, 12);
+            textArea.setFont(selectedFont);
+            textArea.repaint();
         });
 
 
