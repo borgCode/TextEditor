@@ -27,7 +27,7 @@ public class TextEditor {
         JMenuItem fi3 = new JMenuItem("Save");
         JMenuItem fi4 = new JMenuItem("Save as");
         JMenuItem fi5 = new JMenuItem("Print");
-        JMenuItem fi6 = new JMenuItem("Exit");
+        JMenuItem fi6 = new JMenuItem("Close");
         file.add(fi1);
         file.addSeparator();
         file.add(fi2);
@@ -161,6 +161,10 @@ public class TextEditor {
 
 
             }
+        });
+
+        fi6.addActionListener(e -> {
+            frame.dispose();
         });
 
 
