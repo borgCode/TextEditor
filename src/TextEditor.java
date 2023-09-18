@@ -28,6 +28,7 @@ public class TextEditor {
         JMenuItem fi4 = new JMenuItem("Save as");
         JMenuItem fi5 = new JMenuItem("Print");
         JMenuItem fi6 = new JMenuItem("Close");
+
         file.add(fi1);
         file.addSeparator();
         file.add(fi2);
@@ -40,6 +41,27 @@ public class TextEditor {
         file.add(fi6);
 
         JMenu edit = new JMenu("Edit");
+        JMenuItem ed1 = new JMenuItem("Undo             Ctrl+Z");
+        JMenuItem ed2 = new JMenuItem("Cut                Ctrl+X");
+        JMenuItem ed3 = new JMenuItem("Copy             Ctrl+C");
+        JMenuItem ed4 = new JMenuItem("Paste             Ctrl+V");
+        JMenuItem ed5 = new JMenuItem("Delete                Del");
+        JMenuItem ed6 = new JMenuItem("Find               Ctrl+F");
+        JMenuItem ed7 = new JMenuItem("Replace         Ctrl+H");
+        JMenuItem ed8 = new JMenuItem("Select All      Ctrl+A");
+
+        edit.add(ed1);
+        edit.addSeparator();
+        edit.add(ed2);
+        edit.add(ed3);
+        edit.add(ed4);
+        edit.add(ed5);
+        edit.addSeparator();
+        edit.add(ed6);
+        edit.add(ed7);
+        edit.addSeparator();
+        edit.add(ed8);
+
 
         JMenu options = new JMenu("Options");
         JCheckBoxMenuItem darkMode = new JCheckBoxMenuItem("Dark Mode");
@@ -167,6 +189,29 @@ public class TextEditor {
             frame.dispose();
         });
 
+        ed2.addActionListener(e -> {
+            textArea.cut();
+        });
+        ed3.addActionListener(e -> {
+            textArea.copy();
+        });
+        ed4.addActionListener(e -> {
+            textArea.paste();
+        });
+        ed5.addActionListener(e -> {
+            textArea.replaceSelection("");
+        });
+        ed6.addActionListener(e -> {
+            //find Method
+        });
+        ed7.addActionListener(e -> {
+            //Replace Method
+        });
+        ed8.addActionListener(e -> {
+            textArea.selectAll();
+        });
+
+
 
         darkMode.addActionListener(new ActionListener() {
             @Override
@@ -201,6 +246,8 @@ public class TextEditor {
             textArea.setFont(selectedFont);
             textArea.repaint();
         });
+
+
 
 
     }
