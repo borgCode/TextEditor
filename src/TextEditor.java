@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.*;
 
 public class TextEditor {
@@ -22,11 +23,11 @@ public class TextEditor {
     public TextEditor() {
 
         JMenu file = new JMenu("File");
-        JMenuItem fi1 = new JMenuItem("New");
-        JMenuItem fi2 = new JMenuItem("Open");
-        JMenuItem fi3 = new JMenuItem("Save");
-        JMenuItem fi4 = new JMenuItem("Save as");
-        JMenuItem fi5 = new JMenuItem("Print");
+        JMenuItem fi1 = new JMenuItem("New                   Ctrl+N");
+        JMenuItem fi2 = new JMenuItem("Open                 Ctrl+O");
+        JMenuItem fi3 = new JMenuItem("Save                   Ctrl+S");
+        JMenuItem fi4 = new JMenuItem("Save as              Ctrl+Shift+S");
+        JMenuItem fi5 = new JMenuItem("Print                  Ctrl+P");
         JMenuItem fi6 = new JMenuItem("Close");
 
         file.add(fi1);
@@ -78,9 +79,7 @@ public class TextEditor {
 
         textArea.setLineWrap(true);
 
-        frame.add(sp);
-
-
+        frame.add(sp, BorderLayout.CENTER);
         frame.setTitle(fileTitle);
 
         frame.setJMenuBar(menuBar);
@@ -92,14 +91,16 @@ public class TextEditor {
         frame.setVisible(true);
 
 
-        fi1.addActionListener(new ActionListener() {
+        Action newListener = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TextEditor te = new TextEditor();
             }
-        });
+        };
 
-        fi2.addActionListener(new ActionListener() {
+        fi1.addActionListener(newListener);
+        addKeyBind(fi1,KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK, "newKeyBind", newListener);
+        Action openListener = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int returnVal = fc.showOpenDialog(fi2);
@@ -115,11 +116,13 @@ public class TextEditor {
                         throw new RuntimeException(ex);
                     }
                 }
-
             }
-        });
+        };
 
-        fi3.addActionListener(new ActionListener() {
+        fi2.addActionListener(openListener);
+        addKeyBind(fi2, KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK, "openKeyBind", openListener);
+
+        Action saveListener = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!fileTitle.equals("")) {
@@ -153,10 +156,14 @@ public class TextEditor {
                     }
                 }
             }
-        });
+        };
+
+        fi3.addActionListener(saveListener);
+        addKeyBind(fi3, KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK,"saveKeyBind", saveListener);
 
 
-        fi4.addActionListener(new ActionListener() {
+
+        Action saveAsListener = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int returnVal = fc.showSaveDialog(fi4);
@@ -180,14 +187,19 @@ public class TextEditor {
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-
-
             }
-        });
+        };
+
+        fi4.addActionListener(saveAsListener);
+        addKeyBind(fi4, KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK+KeyEvent.SHIFT_DOWN_MASK, "saveAsKeyBind", saveAsListener);
+
+        //print listener
+
 
         fi6.addActionListener(e -> {
             frame.dispose();
         });
+
 
         ed2.addActionListener(e -> {
             textArea.cut();
@@ -202,7 +214,7 @@ public class TextEditor {
             textArea.replaceSelection("");
         });
         ed6.addActionListener(e -> {
-            //find Method
+
         });
         ed7.addActionListener(e -> {
             //Replace Method
@@ -251,6 +263,14 @@ public class TextEditor {
 
 
     }
+
+    public static void addKeyBind(JComponent comp, int keyCode, int mask, String id, Action action) {
+        InputMap newIm = comp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap newAm = comp.getActionMap();
+        newIm.put(KeyStroke.getKeyStroke(keyCode, mask, false), id);
+        newAm.put(id, action);
+    }
+
 
 
 }
