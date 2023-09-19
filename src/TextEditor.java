@@ -41,6 +41,7 @@ public class TextEditor {
         file.addSeparator();
         file.add(fi6);
 
+
         JMenu edit = new JMenu("Edit");
         JMenuItem ed1 = new JMenuItem("Undo             Ctrl+Z");
         JMenuItem ed2 = new JMenuItem("Cut                Ctrl+X");
@@ -66,9 +67,13 @@ public class TextEditor {
 
         JMenu options = new JMenu("Options");
         JCheckBoxMenuItem darkMode = new JCheckBoxMenuItem("Dark Mode");
+        JCheckBoxMenuItem readOnly = new JCheckBoxMenuItem("Read only");
         options.add(darkMode);
+        options.add(readOnly);
 
         JComboBox<String> fontList = new JComboBox<>(fonts);
+
+
 
 
         menuBar.add(file);
@@ -214,7 +219,7 @@ public class TextEditor {
             textArea.replaceSelection("");
         });
         ed6.addActionListener(e -> {
-
+            FindDialog fd = new FindDialog(frame, textArea);
         });
         ed7.addActionListener(e -> {
             //Replace Method
