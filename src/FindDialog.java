@@ -8,7 +8,6 @@ public class FindDialog {
 
     JTextField textField = new JTextField();
     JTextArea textArea;
-    JLabel searchResult = new JLabel("");
 
     public FindDialog(JFrame frame, JTextArea textArea) {
         this.textArea = textArea;
@@ -20,20 +19,16 @@ public class FindDialog {
 
         findDialog.setLocationRelativeTo(frame);
 
-        JPanel contentPanel = new JPanel();
-        contentPanel.setLayout(new BorderLayout());
+
+
         JLabel findLabel = new JLabel("Input search text", JLabel.CENTER);
-        findLabel.setBorder(new EmptyBorder(3, 3, 8, 3));
-
-
 
         JPanel bottomPanel = new JPanel(new FlowLayout());
         JButton findNextButton = new JButton("Find next");
         JButton cancelButton = new JButton("Cancel");
         bottomPanel.add(findNextButton);
         bottomPanel.add(cancelButton);
-        searchResult.setBorder(new EmptyBorder(0, 40, 0, 0));
-        bottomPanel.add(searchResult);
+
 
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
@@ -46,11 +41,35 @@ public class FindDialog {
         leftPanel.add(downDirection);
         leftPanel.add(wrapAround);
 
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gc = new GridBagConstraints();
 
-        contentPanel.add(findLabel, BorderLayout.NORTH);
-        contentPanel.add(textField, BorderLayout.CENTER);
-        contentPanel.add(bottomPanel, BorderLayout.SOUTH);
-        contentPanel.add(leftPanel, BorderLayout.WEST);
+
+        gc.weightx = 0.5;
+        gc.weighty = 0.5;
+        gc.gridx = 0;
+        gc.gridy = 1;
+        contentPanel.add(leftPanel, gc);
+
+        gc.anchor = GridBagConstraints.NORTH;
+        gc.gridx = 1;
+        gc.gridy = 0;
+        contentPanel.add(findLabel, gc);
+
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.insets = new Insets(3, 3, 3, 10);
+        gc.gridx = 1;
+        gc.gridy = 1;
+        contentPanel.add(textField, gc);
+
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.gridwidth = 2;
+        gc.gridx = 0;
+        gc.gridy = 2;
+        contentPanel.add(bottomPanel, gc);
+
+
         findDialog.getContentPane().add(contentPanel);
 
         findDialog.setVisible(true);
