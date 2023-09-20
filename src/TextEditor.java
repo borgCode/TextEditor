@@ -218,9 +218,16 @@ public class TextEditor {
         ed5.addActionListener(e -> {
             textArea.replaceSelection("");
         });
-        ed6.addActionListener(e -> {
-            FindDialog fd = new FindDialog(frame, textArea);
-        });
+
+        Action findListener = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FindDialog fd = new FindDialog(frame, textArea);
+            }
+        };
+        ed6.addActionListener(findListener);
+        addKeyBind(ed6, KeyEvent.VK_F, KeyEvent.CTRL_DOWN_MASK, "findKeyBind", findListener);
+
         ed7.addActionListener(e -> {
             //Replace Method
         });
