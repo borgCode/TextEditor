@@ -110,7 +110,7 @@ public class TextEditor {
             public void actionPerformed(ActionEvent e) {
                 int returnVal = fc.showOpenDialog(fi2);
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    try (BufferedReader reader = new BufferedReader(new FileReader(fc.getSelectedFile() + ".txt"))) {
+                    try (BufferedReader reader = new BufferedReader(new FileReader(fc.getSelectedFile()))) {
                         textArea.read(reader, textArea);
                         filePath = fc.getSelectedFile();
                         fileTitle = fc.getSelectedFile().getName().replaceFirst("[.][^.]+$", "");
@@ -254,6 +254,14 @@ public class TextEditor {
                         }
                     });
                 }
+            }
+        });
+
+        readOnly.addActionListener(e -> {
+            if (readOnly.isSelected()) {
+                textArea.setEditable(false);
+            } else {
+                textArea.setEditable(true);
             }
         });
 
