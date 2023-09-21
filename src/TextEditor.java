@@ -49,8 +49,7 @@ public class TextEditor {
         JMenuItem ed4 = new JMenuItem("Paste             Ctrl+V");
         JMenuItem ed5 = new JMenuItem("Delete                Del");
         JMenuItem ed6 = new JMenuItem("Find               Ctrl+F");
-        JMenuItem ed7 = new JMenuItem("Replace         Ctrl+H");
-        JMenuItem ed8 = new JMenuItem("Select All      Ctrl+A");
+        JMenuItem ed7 = new JMenuItem("Select All      Ctrl+A");
 
         edit.add(ed1);
         edit.addSeparator();
@@ -62,7 +61,7 @@ public class TextEditor {
         edit.add(ed6);
         edit.add(ed7);
         edit.addSeparator();
-        edit.add(ed8);
+        edit.add(ed7);
 
 
         JMenu options = new JMenu("Options");
@@ -74,13 +73,10 @@ public class TextEditor {
         JComboBox<String> fontList = new JComboBox<>(fonts);
 
 
-
-
         menuBar.add(file);
         menuBar.add(edit);
         menuBar.add(options);
         menuBar.add(fontList);
-
 
         textArea.setLineWrap(true);
 
@@ -115,8 +111,6 @@ public class TextEditor {
                         filePath = fc.getSelectedFile();
                         fileTitle = fc.getSelectedFile().getName().replaceFirst("[.][^.]+$", "");
                         frame.setTitle(fileTitle);
-                    } catch (FileNotFoundException ex) {
-                        throw new RuntimeException(ex);
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -228,10 +222,8 @@ public class TextEditor {
         ed6.addActionListener(findListener);
         addKeyBind(ed6, KeyEvent.VK_F, KeyEvent.CTRL_DOWN_MASK, "findKeyBind", findListener);
 
+
         ed7.addActionListener(e -> {
-            //Replace Method
-        });
-        ed8.addActionListener(e -> {
             textArea.selectAll();
         });
 
